@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Цели и Задания</title>
+</head>
+<body>
+<h1>Мои Цели по Подписчикам</h1>
+<ul id="goals">
+<li>Цель 1: 100 подписчиков</li>
+<li>Цель 2: 500 подписчиков</li>
+<li>Цель 3: 1000 подписчиков</li>
+</ul>
+
+<h1>Задания</h1>
+<ul id="tasks">
+<li>Задание 1: Сделать что-то интересное</li>
+<li>Задание 2: Сделать что-то сложное</li>
+<li>Задание 3: Сделать что-то необычное</li>
+</ul>
+
+<script>
+const apiKey = 'YOUR_YOUTUBE_API_KEY';
+const channelId = 'YOUR_CHANNEL_ID';
+
+// получить количество подписчиков
+async function getSubscriberCount() {
+  const response = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`);
+  const data = await response.json();
+  return data.items[0].statistics.subscriberCount;
+}
+
+// пример заданий
+const tasks = [
+  { task: "Сделать что-то интересное", chance: 0.5 },
+  { task: "Сделать что-то сложное", chance: 0.3 },
+  { task: "Сделать что-то необычное", chance: 0.2 }
+];
+
+function getRandomTask() {
+  const random = Math.random();
+  let cumulativeChance = 0;
+  for (let i = 0; i < tasks.length; i++) {
+    cumulativeChance += tasks[i].chance;
+    if (random < cumulativeChance) {
+      return tasks[i].task;
+    }
+  }
+}
+
+function updateTasks() {
+  const tasksElement = document.getElementById('tasks');
+  tasksElement.innerHTML = '';
+  for (let i = 0; i < tasks.length; i++) {
+    const task = getRandomTask();
+    const listItem = document.createElement('li');
+    listItem.textContent = task;
+    tasksElement.appendChild(listItem);
+  }
+}
+
+// обновлять задания каждый день
+setInterval(updateTasks, 86400000); // 86400000 мс = 1 день
+updateTasks();
+
+// обновить цели по количеству подписчиков
+async function updateGoals() {
+  const subscriberCount = await getSubscriberCount();
+  document.getElementById('goals').innerHTML = `<li>Цель 1: 100 подписчиков (Текущие: ${subscriberCount})</li>
+    <li>Цель 2: 500 подписчиков</li>
+    <li>Цель 3: 1000 подписчиков</li>
+  `;
+}
+
+updateGoals();
+</script>
+</body>
+</html>
