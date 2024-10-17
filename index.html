@@ -3,88 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Цели и Задания</title>
+<title>Цели по Подписчикам и Задания</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background-color: #f4f4f4;
+color: #333;
+padding: 20px;
+}
+
+h1 {
+text-align: center;
+color: #444;
+}
+
+ul {
+list-style-type: none;
+padding: 0;
+}
+
+li {
+background: #fff;
+margin: 10px 0;
+padding: 15px;
+border-radius: 5px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+li:nth-child(even) {
+background: #e9e9e9;
+}
+
+.goal {
+font-weight: bold;
+color: #007BFF;
+}
+
+.task {
+font-style: italic;
+color: #555;
+}
+</style>
 </head>
 <body>
-<h1>Мои Цели по Подписчикам</h1>
+<h1>Цели по Подписчикам и Задания</h1>
 <ul id="goals">
-<li>Цель 1: 100 подписчиков</li>
-<li>Цель 2: 500 подписчиков</li>
-<li>Цель 3: 1000 подписчиков</li>
+<li><span class="goal">100 подписчиков</span> - <span class="task">Выпустить видео: "Первый юбилей"</span></li>
+<li><span class="goal">500 подписчиков</span> - <span class="task">Выпустить видео: "Как я достиг 500 подписчиков"</span></li>
+<li><span class="goal">1000 подписчиков</span> - <span class="task">Выпустить видео: "Празднование 1000 подписчиков"</span></li>
+<li><span class="goal">2000 подписчиков</span> - <span class="task">Выпустить видео: "Мои лучшие советы для новичков"</span></li>
+<li><span class="goal">5000 подписчиков</span> - <span class="task">Выпустить видео: "Путь к 5000 подписчиков"</span></li>
+<li><span class="goal">10000 подписчиков</span> - <span class="task">Выпустить видео: "Большое спасибо за 10000 подписчиков"</span></li>
 </ul>
-
-<h1>Задания</h1>
-<ul id="tasks">
-</ul>
-
-<script>
-const apiKey = 'YOUR_YOUTUBE_API_KEY';
-const channelId = 'YOUR_CHANNEL_ID';
-let highestSubscriberCount = 0;
-let lastTaskDate = '';
-
-// реальный список заданий
-const tasks = [
-{ task: "Записать новое видео", chance: 0.4 },
-{ task: "Сделать стрим", chance: 0.3 },
-{ task: "Ответить на комментарии", chance: 0.2 },
-{ task: "Сделать розыгрыш", chance: 0.1 }
-];
-
-async function getSubscriberCount() {
-try {
-const response = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`);
-const data = await response.json();
-if (data.items && data.items.length > 0) {
-return parseInt(data.items[0].statistics.subscriberCount);
-} else {
-throw new Error('Channel not found');
-}
-} catch (error) {
-console.error('Error fetching subscriber count:', error);
-return 0;
-}
-}
-
-function getRandomTask() {
-const random = Math.random();
-let cumulativeChance = 0;
-for (let i = 0; i < tasks.length; i++) {
-cumulativeChance += tasks[i].chance;
-if (random < cumulativeChance) {
-return tasks[i].task;
-}
-}
-}
-
-function updateTasks() {
-const today = new Date().toISOString().split('T')[0];
-if (today !== lastTaskDate) {
-lastTaskDate = today;
-const tasksElement = document.getElementById('tasks');
-tasksElement.innerHTML = '';
-const task = getRandomTask();
-const listItem = document.createElement('li');
-listItem.textContent = `${task} (Выдано: ${today})`;
-tasksElement.appendChild(listItem);
-}
-}
-
-async function updateGoals() {
-const subscriberCount = await getSubscriberCount();
-if (subscriberCount > highestSubscriberCount) {
-highestSubscriberCount = subscriberCount;
-updateTasks();
-}
-  document.getElementById('goals').innerHTML = `
-<li>Цель 1: 100 подписчиков (Текущие: ${highestSubscriberCount})</li>
-<li>Цель 2: 500 подписчиков</li>
-<li>Цель 3: 1000 подписчиков</li>
-`;
-}
-
-setInterval(updateGoals, 86400000); // обновлять каждый день
-updateGoals();
-</script>
 </body>
 </html>
